@@ -15,7 +15,7 @@
   <form action="https://www.paypal.com/uk/cgi-bin/webscr" method="post">
     <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
 
-    <p id="datepairExample">
+    <div id="container">
 
       <h4 class="sidebar-section-header">Start</h4>
       <div class="sidebar-section group">
@@ -32,7 +32,7 @@
       </div>
 
 
-    </p>
+    </div>
 
      <link rel="stylesheet" type="text/css" href="/js/jquery.timepicker.css" />
       <link rel="stylesheet" type="text/css" href="/js/bootstrap-datepicker.css" />
@@ -40,9 +40,11 @@
 
     <script type="text/javascript" src="/js/jquery.timepicker.js"></script>
     <script type="text/javascript" src="/js/bootstrap-datepicker.js"></script>
+	<!--
     <script type="text/javascript" src="/js/datepair.js"></script>
     <script type="text/javascript" src="/js/jquery.datepair.js"></script>
-
+-->
+	<script type="text/javascript" src="/js/jquery.datepair.min.js"></script>
 
     <!-- Paypal CSS files -->
 <link rel="stylesheet" type="text/css" href="/js/jPayPalCart.css" />    
@@ -53,18 +55,34 @@
 
     <script>
         // initialize input widgets first
-        $('.time').timepicker({
+        
+        $('#container .time').timepicker({
             'showDuration': true,
-            'timeFormat': 'g:ia'
+            'timeFormat': 'g:i a'
         });
+				
 
-        $('.date').datepicker({
-            'format': 'yyyy-m-d',
+        $('#container .date').datepicker({
+            'format': 'm/d/yyyy',
             'autoclose': true
         });
 
-        // initialize datepair
-        $('#datepairExample').datepair();
+				 $('#container').datepair();
+
+				 $('#container').on('rangeSelected', function(e){
+					  milliseconds = $('#container').datepair('getTimeDiff');
+    				console.log("milliseconds init: " + milliseconds);
+					  hoursRes = parseFloat(milliseconds/3600000);
+					 
+					 
+			hourlyRate =parseFloat($('.price-data').html().split('/sup>')[1]);
+			 
+          $("#myCart").PayPalCart('remove', "hours");
+         $("#myCart").PayPalCart('add', "hours", "hours of reservation", hoursRes, hourlyRate, 0.08);
+
+					 
+				 });
+			
     </script>
 
     <h4 class="sidebar-section-header">Guest count</h4>
@@ -144,7 +162,7 @@
         }
       },1000);
       
-
+/**
        $('.end:nth(1), .start:nth(1), .end:nth(0), .start:nth(0)').on('change', function(){
 
         if($('.end:nth(1)').val()==""){
@@ -154,11 +172,15 @@
         //  startTime= $('.start:nth(0)').val() + " " + $('.start:nth(1)').val().split('am')[0].split('pm')[0]
          // endTime = $('.end:nth(0)').val() + " " + $('.end:nth(1)').val()
 
+				 // automatically assumes both are AM - need to check whether AM or PM
          try{
           startHour= $('.start:nth(1)').val().split('am')[0].split('pm')[0]+ ":00";
           endHour= $('.end:nth(1)').val().split('am')[0].split('pm')[0]+ ":00";
-
-
+					 
+					 startHour = startHour + ":00";
+					 endHour = endHour + ":00";
+					 
+					 console.log("startHour: " + startHour + " and endHour: " + endHour);
           startDate = new Date($('.start:nth(0)').val() + " " + startHour);
           endDate = new Date($('.end:nth(0)').val() + " " + endHour);
 
@@ -185,6 +207,7 @@
           return;
         }
 
+          /**
           hoursRes = parseFloat((endDate - startDate)/3600000);
 
           if(hoursRes <=0){
@@ -199,16 +222,13 @@
             return;
           }
         }
-
-          hourlyRate =parseFloat($('.price-data').html().split('/sup>')[1])
-          $("#myCart").PayPalCart('remove', "hours");
-         $("#myCart").PayPalCart('add', "hours", "hours of reservation", hoursRes, hourlyRate, 0.08);
-
-
+				
+				 
+				 
        })
       }
 
-
+**/
 
 
     </script>
