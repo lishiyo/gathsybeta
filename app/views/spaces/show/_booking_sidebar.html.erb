@@ -64,16 +64,17 @@
 
         $('#container .date').datepicker({
             'format': 'm/d/yyyy',
-            'autoclose': true
+            'autoclose': true,
+					startDate: '0d'
         });
 
-				 $('#container').datepair();
+				 var container = $('#container').datepair();
 
-				 $('#container').on('rangeSelected', function(e){
+
+				 container.on('rangeSelected', function(e){
 					  milliseconds = $('#container').datepair('getTimeDiff');
     				console.log("milliseconds init: " + milliseconds);
 					  hoursRes = parseFloat(milliseconds/3600000);
-					 
 					 
 			hourlyRate =parseFloat($('.price-data').html().split('/sup>')[1]);
 			 
